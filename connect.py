@@ -14,7 +14,8 @@ class Connect:
     def receive_data(self):
         data = self.sock.recv(1024)
         if data:
-            return data.decode("utf-8")
+            data = data.decode("utf-8").replace("\r\n", "")
+            return data
 
     def send_data(self, message):
         self.sock.send(message.encode('utf-8'))
