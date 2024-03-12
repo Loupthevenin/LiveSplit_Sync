@@ -1,22 +1,40 @@
+def convert_time_format(time_str):
 
+    if "-" in time_str:
+        time_str = time_str.replace("-", "")
+        time_diff = "-"
+    elif "+" in time_str:
+        time_str = time_str.replace("+", "")
+        time_diff = "+"
+    else:
+        time_diff = ""
 
-class Fmt:
-    def __init__(self, delta, final_time, split_index, real_time):
-        self.delta = delta
-        self.final_time = final_time
-        self.split_index = split_index
-        self.real_time = real_time
+    parts = time_str.split('.')
 
-    def reset(self) -> str:
-        time_freeze = self.real_time
-        if self.split_index == "-1" and self.real_time == time_freeze and self.final_time == "0.00.00":
-            return "RESET"
+    if len(parts) == 1:
+        miliseconds = parts[0].zfill(2)
+        seconds = '00'
+        minutes = '00'
+        hours = '0'
+    elif len(parts) == 2:
+        miliseconds = parts[-1].zfill(2)
+        seconds = parts[-2].zfill(2)
+        minutes = '00'
+        hours = '0'
+    elif len(parts) == 3:
+        miliseconds = parts[-1].zfill(2)
+        seconds = parts[-2].zfill(2)
+        minutes = parts[-3].zfill(2)
+        hours = '0'
+    elif len(parts) == 4:
+        miliseconds = parts[-1].zfill(2)
+        seconds = parts[-2].zfill(2)
+        minutes = parts[-3].zfill(2)
+        hours = parts[-4].zfill(2)
+    else:
+        miliseconds = '00'
+        seconds = '00'
+        minutes = '00'
+        hours = '0'
 
-    def pb(self) -> str:
-        if self.final_time != "0.00.00":
-            return self.final_time
-
-    def delta(self):
-        delta_freeze = self.delta
-        if self.delta != "-":
-            pass
+    return f"{time_diff}{hours}:{minutes}:{seconds},{miliseconds}"

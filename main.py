@@ -1,6 +1,6 @@
 from connect import Connect
 from constants.order import *
-from datetime import time, datetime, timedelta
+from analyser import convert_time_format
 
 unique_delta_values = []
 unique_final_values = []
@@ -14,11 +14,9 @@ def get_unique_delta_time(data):
     if data == '-':
         return False
 
-    time_t = data.replace('.', ':')
-
-    if not unique_delta_values or time_t != unique_delta_values[-1]:
-        unique_delta_values.append(time_t)
-        return time_t
+    if not unique_delta_values or data != unique_delta_values[-1]:
+        unique_delta_values.append(data)
+        return data
 
 
 def get_unique_final_time(data):
@@ -27,11 +25,9 @@ def get_unique_final_time(data):
     if data == "0.00.00":
         return False
 
-    time_t = data.replace('.', ':')
-
-    if not unique_final_values or time_t != unique_final_values[-1]:
-        unique_final_values.append(time_t)
-        return time_t
+    if not unique_final_values or data != unique_final_values[-1]:
+        unique_final_values.append(data)
+        return data
 
 
 def main():
@@ -44,11 +40,11 @@ def main():
     while True:
         client.send_data(getdelta)
         data = client.receive_data()
-        print(data)
         unique_delta_time = get_unique_delta_time(data)
 
         if unique_delta_time:
-            print(unique_delta_time, type(unique_delta_time))
+            time_format = convert_time_format(unique_delta_time)
+            print(time_format)
             # faire tout le reste le temps a été split
 
         client.send_data(getfinaltime_comp)
@@ -56,7 +52,8 @@ def main():
         unique_final_time = get_unique_final_time(data)
 
         if unique_final_time:
-            print(unique_final_time, type(unique_final_time))
+            time_formats = convert_time_format(unique_final_time)
+            print(time_formats)
 
 
 if __name__ == '__main__':

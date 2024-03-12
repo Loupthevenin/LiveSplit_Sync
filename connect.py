@@ -14,7 +14,7 @@ class Connect:
     def receive_data(self):
         data = self.sock.recv(1024)
         if data:
-            data = data.decode("utf-8").replace("\r\n", "")
+            data = data.decode("utf-8").replace("\r\n", "").replace("−", "-")
             return data
 
     def send_data(self, message):
