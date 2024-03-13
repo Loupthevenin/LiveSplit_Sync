@@ -1,4 +1,6 @@
 import socket
+import gspread
+from google.oauth2.service_account import Credentials
 
 
 class Connect:
@@ -22,3 +24,14 @@ class Connect:
 
     def close(self):
         self.sock.close()
+
+
+# CONNECT GOOGLE SHEETS
+scopes = [
+    "https://www.googleapis.com/auth/spreadsheets"
+]
+creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+client = gspread.authorize(creds)
+
+sheet_id = "14v8vv4tpFQh4PYhelx6EI2fDA5FPhbWTVX7d6gIyOf0"
+workbook = client.open_by_key(sheet_id)
