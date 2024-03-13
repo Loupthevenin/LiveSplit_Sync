@@ -6,6 +6,9 @@ def convert_time_format(time_str):
     elif "+" in time_str:
         time_str = time_str.replace("+", "")
         time_diff = "+"
+    elif ":" in time_str:
+        time_str = time_str.replace(":", ".")
+        time_diff = ""
     else:
         time_diff = ""
 

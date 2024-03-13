@@ -8,8 +8,11 @@ unique_split_index_values = []
 unique_timer_phase_value = [""]
 
 
-def get_unique_delta_time(data):
+def get_delta_time(client):
     global unique_delta_values
+
+    client.send_data(getdelta)
+    data = client.receive_data()
 
     if data == '-':
         return False
@@ -19,8 +22,11 @@ def get_unique_delta_time(data):
         return data
 
 
-def get_unique_final_time(data):
+def get_final_time(client):
     global unique_final_values
+
+    client.send_data(getfinaltime_comp)
+    data = client.receive_data()
 
     if data == "0.00.00":
         return False
@@ -30,8 +36,11 @@ def get_unique_final_time(data):
         return data
 
 
-def get_unique_timer_phase(data):
+def get_timer_phase(client):
     global unique_timer_phase_value
+
+    client.send_data(gettimerphase)
+    data = client.receive_data()
 
     if data == "NotRunning" and unique_timer_phase_value[-1] == "Running":
         unique_timer_phase_value.append(data)
@@ -50,28 +59,22 @@ def main():
 
     while True:
         # DELTA TIME
-        client.send_data(getdelta)
-        data = client.receive_data()
-        unique_delta_time = get_unique_delta_time(data)
+        delta_time = get_delta_time(client)
 
-        if unique_delta_time:
-            time_format = convert_time_format(unique_delta_time)
+        if delta_time:
+            time_format = convert_time_format(delta_time)
             print(time_format)
             # faire tout le reste le temps a été split
 
         # FINAL TIME
-        client.send_data(getfinaltime_comp)
-        data = client.receive_data()
-        unique_final_time = get_unique_final_time(data)
+        final_time = get_final_time(client)
 
-        if unique_final_time:
-            time_format = convert_time_format(unique_final_time)
+        if final_time:
+            time_format = convert_time_format(final_time)
             print(time_format)
 
         # RESET
-        client.send_data(gettimerphase)
-        data = client.receive_data()
-        is_reset = get_unique_timer_phase(data)
+        is_reset = get_timer_phase(client)
 
         if is_reset:
             print("-")
