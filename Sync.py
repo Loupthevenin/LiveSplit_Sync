@@ -19,7 +19,7 @@ def current_split() -> int:
     sheet = workbook.get_worksheet(index_worksheets)
     values = sheet.row_values(nb_row_edit)
 
-    return len(values) - nb_cols_before_split_sheets
+    return len(values) + 1
 
 
 def new_row():
@@ -29,7 +29,9 @@ def new_row():
 
 def write_time(time, index_col) -> bool:
     sheet = workbook.get_worksheet(index_worksheets)
-    is_none = True if sheet.cell(nb_row_edit, index_col).value == '' else False
+    is_none = sheet.cell(nb_row_edit, index_col).value == None
+
+    print(is_none)
 
     if is_none:
         sheet.update_cell(nb_row_edit, index_col, time)
@@ -62,8 +64,3 @@ def write_reset():
     reset_col = len(values_splits) + 1
 
     sheet.cell(nb_row_edit, reset_col, "RESET")
-
-
-split = how_many_split()
-
-print(split)

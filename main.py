@@ -53,7 +53,7 @@ def get_timer_phase(client):
         return False
 
 
-def get_slipt_index(client):
+def get_split_index(client):
     client.send_data(getsplitindex)
     data = client.receive_data()
 
@@ -70,6 +70,8 @@ def main():
     client = Connect(SERVER_IP, PORT)
     client.connect()
 
+    # Au moment ou on lance le server ID date pas remplis
+
     while True:
         # DELTA TIME
         delta_time = get_delta_time(client)
@@ -78,11 +80,11 @@ def main():
             time_format = convert_time_format(delta_time)
             print(time_format)
 
-            split_index = get_slipt_index(client)
+            split_index = get_split_index(client)
             if split_index:
                 print(f"Split index delta time : {split_index}")
                 # +1 car commence a 0 et 2 cols donc +3
-                split_index = int(split_index) + nb_cols_before_split_sheets + 1
+                split_index = int(split_index) + nb_cols_before_split_sheets
 
                 if split_index == current_split():
                     write_time(time_format, split_index)
@@ -91,23 +93,21 @@ def main():
 
         # FINAL TIME
         final_time = get_final_time(client)
-
+        # Problème il renvois vrai quand on lance le server
         if final_time:
             time_format = convert_time_format(final_time)
             print(time_format)
-            split_index = get_slipt_index(client)
-            if split_index:
-                print(f"Split index final time : {split_index}")
-                if split_index == '-1':
-                    split_index = how_many_split() + nb_cols_before_split_sheets + 1
-                    write_time(time_format, split_index)
+
+            if current_split() - 2 == how_many_split():
+                split_index = how_many_split() + nb_cols_before_split_sheets + 1
+                write_time(time_format, split_index)
 
         # RESET
         is_reset = get_timer_phase(client)
 
         if is_reset:
             print("-")
-            split_index = get_slipt_index(client)
+            split_index = get_split_index(client)
             if split_index:
                 print(f"Split index reset : {split_index}")
                 if split_index == '-1':
