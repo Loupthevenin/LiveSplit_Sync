@@ -10,7 +10,8 @@ from constants.configs import *
 unique_delta_values = []
 unique_final_values = []
 # unique_split_index_values = []
-unique_timer_phase_value = [""]
+unique_timer_phase_value_reset = [""]
+unique_timer_phase_value_start = [""]
 
 
 def get_delta_time(client):
@@ -42,19 +43,22 @@ def get_final_time(client):
 
 
 def get_timer_phase(client, reset=False, start=False):
-    global unique_timer_phase_value
+    global unique_timer_phase_value_reset, unique_timer_phase_value_start
 
     client.send_data(gettimerphase)
     data = client.receive_data()
 
-    if data == "NotRunning" and unique_timer_phase_value[-1] == "Running" and reset:
-        unique_timer_phase_value.append(data)
+    if data == "NotRunning" and unique_timer_phase_value_reset[-1] == "Running" and reset:
+        unique_timer_phase_value_reset.append(data)
         return True
-    elif data == "Running" and unique_timer_phase_value[-1] == "NotRunning" and start:
-        unique_timer_phase_value.append(data)
+    elif data == "Running" and unique_timer_phase_value_start[-1] == "NotRunning" and start:
+        unique_timer_phase_value_start.append(data)
         return True
-    else:
-        unique_timer_phase_value.append(data)
+    elif reset:
+        unique_timer_phase_value_reset.append(data)
+        return False
+    elif start:
+        unique_timer_phase_value_start.append(data)
         return False
 
 
@@ -85,7 +89,7 @@ def main():
         is_start = get_timer_phase(client, start=True)
 
         if is_start:
-            date = datetime.datetime.now()
+            date = str(datetime.datetime.now())
             write_start(date)
 
         # DELTA TIME
@@ -97,8 +101,6 @@ def main():
 
             split_index = get_split_index(client)
             if split_index:
-                print(f"Split index delta time : {split_index}")
-                # +1 car commence a 0 et 2 cols donc +3
                 split_index = int(split_index) + nb_cols_before_split_sheets
 
                 if split_index == current_split():
@@ -108,7 +110,6 @@ def main():
 
         # FINAL TIME
         final_time = get_final_time(client)
-        # Problème il renvois vrai quand on lance le server
         if final_time:
             time_format = convert_time_format(final_time)
             save_time_format = time_format
@@ -118,6 +119,7 @@ def main():
             if total_split == how_many_split():
                 split_index = current_split()
                 write_time(save_time_format, split_index)
+                new_row()
             elif total_split < how_many_split():
                 waiting = True
                 continue
@@ -126,16 +128,14 @@ def main():
             if total_split == how_many_split():
                 split_index = current_split()
                 write_time(save_time_format, split_index)
+                new_row()
                 waiting = False
 
         # RESET
         is_reset = get_timer_phase(client, reset=True)
-
         if is_reset:
-            print("-")
             split_index = get_split_index(client)
             if split_index:
-                print(f"Split index reset : {split_index}")
                 if split_index == '-1':
                     write_reset()
                     new_row()
