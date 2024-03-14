@@ -19,7 +19,7 @@ def current_split() -> int:
     sheet = workbook.get_worksheet(index_worksheets)
     values = sheet.row_values(2)
 
-    return len(values) + 1
+    return len(values) - 2
 
 
 def new_row():
@@ -49,6 +49,15 @@ def write_start(date) -> bool:
         return True
     else:
         return False
+
+
+def write_reset():
+    sheet = workbook.get_worksheet(index_worksheets)
+    values_splits = sheet.row_values(2)
+
+    reset_col = len(values_splits) + 1
+
+    sheet.cell(2, reset_col, "RESET")
 
 
 split = how_many_split()
