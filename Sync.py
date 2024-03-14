@@ -29,7 +29,7 @@ def new_row():
 
 def write_time(time, index_col) -> bool:
     sheet = workbook.get_worksheet(index_worksheets)
-    is_none = sheet.cell(nb_row_edit, index_col).value == None
+    is_none = sheet.cell(nb_row_edit, index_col).value is None
 
     print(is_none)
 
@@ -40,21 +40,20 @@ def write_time(time, index_col) -> bool:
         return False
 
 
-def write_start(date) -> bool:
+def write_start(date):
     sheet = workbook.get_worksheet(index_worksheets)
-    is_none_A = True if sheet.cell(nb_row_edit, col_ID).value == '' else False
-    is_none_B = True if sheet.cell(nb_row_edit, col_date).value == '' else False
+    is_none_A = True if sheet.cell(nb_row_edit, col_ID).value is None else False
+    is_none_B = True if sheet.cell(nb_row_edit, col_date).value is None else False
 
     if is_none_A and is_none_B:
         ID = sheet.cell(row_pre_ID, col_ID).value
-        if ID == "":
+        if ID is None:
             ID = 1
         else:
             ID += 1
         sheet.update_cells([(nb_row_edit, col_ID, ID), (nb_row_edit, col_date, date)])
-        return True
     else:
-        return False
+        print("Erreur START")
 
 
 def write_reset():

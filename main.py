@@ -1,3 +1,5 @@
+import datetime
+
 from connect import Connect
 from constants.order import *
 from analyser import convert_time_format
@@ -39,13 +41,16 @@ def get_final_time(client):
         return data
 
 
-def get_timer_phase(client):
+def get_timer_phase(client, reset=False, start=False):
     global unique_timer_phase_value
 
     client.send_data(gettimerphase)
     data = client.receive_data()
 
-    if data == "NotRunning" and unique_timer_phase_value[-1] == "Running":
+    if data == "NotRunning" and unique_timer_phase_value[-1] == "Running" and reset:
+        unique_timer_phase_value.append(data)
+        return True
+    elif data == "Running" and unique_timer_phase_value[-1] == "NotRunning" and start:
         unique_timer_phase_value.append(data)
         return True
     else:
@@ -70,9 +75,19 @@ def main():
     client = Connect(SERVER_IP, PORT)
     client.connect()
 
+    waiting = False
+    save_time_format = ""
+
     # Au moment ou on lance le server ID date pas remplis
 
     while True:
+        # Start run
+        is_start = get_timer_phase(client, start=True)
+
+        if is_start:
+            date = datetime.datetime.now()
+            write_start(date)
+
         # DELTA TIME
         delta_time = get_delta_time(client)
 
@@ -96,14 +111,25 @@ def main():
         # Problème il renvois vrai quand on lance le server
         if final_time:
             time_format = convert_time_format(final_time)
+            save_time_format = time_format
             print(time_format)
+            total_split = (current_split() - nb_cols_before_split_sheets - 1)
 
-            if current_split() - 2 == how_many_split():
-                split_index = how_many_split() + nb_cols_before_split_sheets + 1
-                write_time(time_format, split_index)
+            if total_split == how_many_split():
+                split_index = current_split()
+                write_time(save_time_format, split_index)
+            elif total_split < how_many_split():
+                waiting = True
+                continue
+        elif waiting:
+            total_split = (current_split() - nb_cols_before_split_sheets - 1)
+            if total_split == how_many_split():
+                split_index = current_split()
+                write_time(save_time_format, split_index)
+                waiting = False
 
         # RESET
-        is_reset = get_timer_phase(client)
+        is_reset = get_timer_phase(client, reset=True)
 
         if is_reset:
             print("-")
