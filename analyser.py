@@ -40,4 +40,4 @@ def convert_time_format(time_str):
         minutes = '00'
         hours = '0'
 
-    return f"{time_diff}{hours}:{minutes}:{seconds},{miliseconds}"
+    return f"'{time_diff}{hours}:{minutes}:{seconds},{miliseconds}"
