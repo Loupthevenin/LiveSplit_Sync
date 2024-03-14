@@ -1,38 +1,38 @@
 from connect import workbook
+from constants.configs import *
 
 
 # sheets = map(lambda x: x.title, workbook.worksheets())
-index_worksheets = 1
 
 
 def how_many_split() -> int:
     sheet = workbook.get_worksheet(index_worksheets)
-    splits = sheet.row_values(1)
+    splits = sheet.row_values(nb_row_head)
 
     # Colonne supplémentaire necessaire pour le tableau ici 4 par defaut => coherence sur le sheets
-    splits = len(splits) - 4
+    splits = len(splits) - nb_cols_total_head
 
     return splits
 
 
 def current_split() -> int:
     sheet = workbook.get_worksheet(index_worksheets)
-    values = sheet.row_values(2)
+    values = sheet.row_values(nb_row_edit)
 
-    return len(values) - 2
+    return len(values) - nb_cols_before_split_sheets
 
 
 def new_row():
     sheet = workbook.get_worksheet(index_worksheets)
-    sheet.insert_row(index=2)
+    sheet.insert_row(index=nb_row_edit)
 
 
 def write_time(time, index_col) -> bool:
     sheet = workbook.get_worksheet(index_worksheets)
-    is_none = True if sheet.cell(2, index_col).value == '' else False
+    is_none = True if sheet.cell(nb_row_edit, index_col).value == '' else False
 
     if is_none:
-        sheet.update_cell(2, index_col, time)
+        sheet.update_cell(nb_row_edit, index_col, time)
         return True
     else:
         return False
@@ -40,12 +40,16 @@ def write_time(time, index_col) -> bool:
 
 def write_start(date) -> bool:
     sheet = workbook.get_worksheet(index_worksheets)
-    is_none_A = True if sheet.cell(2, 1).value == '' else False
-    is_none_B = True if sheet.cell(2, 2).value == '' else False
+    is_none_A = True if sheet.cell(nb_row_edit, col_ID).value == '' else False
+    is_none_B = True if sheet.cell(nb_row_edit, col_date).value == '' else False
 
     if is_none_A and is_none_B:
-        ID = sheet.cell(3, 1).value
-        sheet.update_cells([(2, 1, ID), (2, 2, date)])
+        ID = sheet.cell(row_pre_ID, col_ID).value
+        if ID == "":
+            ID = 1
+        else:
+            ID += 1
+        sheet.update_cells([(nb_row_edit, col_ID, ID), (nb_row_edit, col_date, date)])
         return True
     else:
         return False
@@ -53,11 +57,11 @@ def write_start(date) -> bool:
 
 def write_reset():
     sheet = workbook.get_worksheet(index_worksheets)
-    values_splits = sheet.row_values(2)
+    values_splits = sheet.row_values(nb_row_edit)
 
     reset_col = len(values_splits) + 1
 
-    sheet.cell(2, reset_col, "RESET")
+    sheet.cell(nb_row_edit, reset_col, "RESET")
 
 
 split = how_many_split()

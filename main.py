@@ -2,6 +2,7 @@ from connect import Connect
 from constants.order import *
 from analyser import convert_time_format
 from Sync import *
+from constants.configs import *
 
 
 unique_delta_values = []
@@ -81,7 +82,7 @@ def main():
             if split_index:
                 print(f"Split index delta time : {split_index}")
                 # +1 car commence a 0 et 2 cols donc +3
-                split_index = int(split_index) + 3
+                split_index = int(split_index) + nb_cols_before_split_sheets + 1
 
                 if split_index == current_split():
                     write_time(time_format, split_index)
@@ -98,7 +99,7 @@ def main():
             if split_index:
                 print(f"Split index final time : {split_index}")
                 if split_index == '-1':
-                    split_index = how_many_split() + 3
+                    split_index = how_many_split() + nb_cols_before_split_sheets + 1
                     write_time(time_format, split_index)
 
         # RESET
