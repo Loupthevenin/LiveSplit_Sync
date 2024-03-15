@@ -1,3 +1,12 @@
+from constants.order import *
+
+
+unique_delta_values = []
+unique_final_values = []
+unique_timer_phase_value_reset = [""]
+unique_timer_phase_value_start = [""]
+
+
 def convert_time_format(time_str):
 
     if "-" in time_str:
@@ -41,3 +50,61 @@ def convert_time_format(time_str):
         hours = '0'
 
     return f"'{time_diff}{hours}:{minutes}:{seconds},{miliseconds}"
+
+
+def get_delta_time(client):
+    global unique_delta_values
+
+    client.send_data(getdelta)
+    data = client.receive_data()
+
+    if data == '-':
+        return False
+
+    if not unique_delta_values or data != unique_delta_values[-1]:
+        unique_delta_values.append(data)
+        return data
+
+
+def get_final_time(client):
+    global unique_final_values
+
+    client.send_data(getfinaltime_comp)
+    data = client.receive_data()
+
+    if data == "0.00.00":
+        return False
+
+    if not unique_final_values or data != unique_final_values[-1]:
+        unique_final_values.append(data)
+        return data
+
+
+def get_timer_phase(client, reset=False, start=False):
+    global unique_timer_phase_value_reset, unique_timer_phase_value_start
+
+    client.send_data(gettimerphase)
+    data = client.receive_data()
+
+    if data == "NotRunning" and unique_timer_phase_value_reset[-1] == "Running" and reset:
+        unique_timer_phase_value_reset.append(data)
+        return True
+    elif data == "Running" and unique_timer_phase_value_start[-1] == "NotRunning" and start:
+        unique_timer_phase_value_start.append(data)
+        return True
+    elif reset:
+        unique_timer_phase_value_reset.append(data)
+        return False
+    elif start:
+        unique_timer_phase_value_start.append(data)
+        return False
+
+
+def get_split_index(client):
+    client.send_data(getsplitindex)
+    data = client.receive_data()
+
+    if data:
+        return data
+    else:
+        return False

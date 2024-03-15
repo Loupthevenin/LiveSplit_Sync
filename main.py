@@ -1,88 +1,17 @@
 import datetime
 
 from connect import Connect
-from constants.order import *
-from analyser import convert_time_format
+from analyser import convert_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index
 from Sync import *
 from constants.configs import *
 
 
-unique_delta_values = []
-unique_final_values = []
-# unique_split_index_values = []
-unique_timer_phase_value_reset = [""]
-unique_timer_phase_value_start = [""]
-
-
-def get_delta_time(client):
-    global unique_delta_values
-
-    client.send_data(getdelta)
-    data = client.receive_data()
-
-    if data == '-':
-        return False
-
-    if not unique_delta_values or data != unique_delta_values[-1]:
-        unique_delta_values.append(data)
-        return data
-
-
-def get_final_time(client):
-    global unique_final_values
-
-    client.send_data(getfinaltime_comp)
-    data = client.receive_data()
-
-    if data == "0.00.00":
-        return False
-
-    if not unique_final_values or data != unique_final_values[-1]:
-        unique_final_values.append(data)
-        return data
-
-
-def get_timer_phase(client, reset=False, start=False):
-    global unique_timer_phase_value_reset, unique_timer_phase_value_start
-
-    client.send_data(gettimerphase)
-    data = client.receive_data()
-
-    if data == "NotRunning" and unique_timer_phase_value_reset[-1] == "Running" and reset:
-        unique_timer_phase_value_reset.append(data)
-        return True
-    elif data == "Running" and unique_timer_phase_value_start[-1] == "NotRunning" and start:
-        unique_timer_phase_value_start.append(data)
-        return True
-    elif reset:
-        unique_timer_phase_value_reset.append(data)
-        return False
-    elif start:
-        unique_timer_phase_value_start.append(data)
-        return False
-
-
-def get_split_index(client):
-    client.send_data(getsplitindex)
-    data = client.receive_data()
-
-    if data:
-        return data
-    else:
-        return False
-
-
 def main():
-    SERVER_IP = '127.168.1.27'
-    PORT = 16834
-
-    client = Connect(SERVER_IP, PORT)
-    client.connect()
-
     waiting = False
     save_time_format = ""
 
-    # Au moment ou on lance le server ID date pas remplis
+    client = Connect(SERVER_IP, PORT)
+    client.connect()
 
     while True:
         # Start run
