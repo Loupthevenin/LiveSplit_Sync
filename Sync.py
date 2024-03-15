@@ -1,5 +1,6 @@
 from connect import workbook
 from constants.configs import *
+from analyser import find_pb
 
 
 # sheets = map(lambda x: x.title, workbook.worksheets())
@@ -49,3 +50,11 @@ def write_start(date):
 
 def write_reset(reset_col):
     sheet.update_cell(nb_row_edit, reset_col, "RESET")
+
+
+def is_pb(index_col):
+    pb_values = sheet.col_values(index_col)
+    print(pb_values)
+    pb_values.pop(0)
+    if find_pb(pb_values) != 0:
+        pass
