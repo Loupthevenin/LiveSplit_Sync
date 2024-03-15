@@ -27,22 +27,15 @@ def new_row():
 
 
 def write_time(time, index_col) -> bool:
-    is_none = sheet.cell(nb_row_edit, index_col).value is None
-
-    print(is_none)
-
-    if is_none:
+    try:
         sheet.update_cell(nb_row_edit, index_col, time)
         return True
-    else:
+    except:
         return False
 
 
 def write_start(date):
-    is_none_A = True if sheet.cell(nb_row_edit, col_ID).value is None else False
-    is_none_B = True if sheet.cell(nb_row_edit, col_date).value is None else False
-
-    if is_none_A and is_none_B:
+    try:
         ID = sheet.cell(row_pre_ID, col_ID).value
         if ID is None:
             ID = 1
@@ -50,11 +43,9 @@ def write_start(date):
             ID = int(ID) + 1
         sheet.update_cell(nb_row_edit, col_ID, int(ID))
         sheet.update_cell(nb_row_edit, col_date, date)
-    else:
+    except:
         print("Erreur START")
 
 
-def write_reset():
-    values_splits = sheet.row_values(nb_row_edit)
-    reset_col = len(values_splits) + 1
+def write_reset(reset_col):
     sheet.update_cell(nb_row_edit, reset_col, "RESET")
