@@ -31,7 +31,7 @@ def main():
     while True:
         # Start run
         if get_timer_phase(client, start=True):
-            date = str(datetime.datetime.now())
+            date = str(datetime.datetime.now())[:-7]
             write_start(date)
 
         # DELTA TIME
