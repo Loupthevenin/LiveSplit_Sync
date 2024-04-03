@@ -6,6 +6,18 @@ from Sync import *
 from constants.configs import *
 
 
+def if_final_time(time_list, save_time_format):
+    # split_index = current_split()
+    split_index = len(time_list) + nb_cols_before_split_sheets + 1
+    if is_pb(split_index, save_time_format):
+        write_time(save_time_format, split_index)
+    else:
+        write_time(save_time_format, split_index + 1)
+    time_list.append(save_time_format)
+    new_row()
+    time_list.clear()
+
+
 def main():
     waiting = False
     save_time_format = ""
@@ -49,29 +61,13 @@ def main():
             # total_split = (current_split() - nb_cols_before_split_sheets - 1)
 
             if len(time_list) == total_splits:
-                # split_index = current_split()
-                split_index = len(time_list) + nb_cols_before_split_sheets + 1
-                if is_pb(split_index, save_time_format):
-                    write_time(save_time_format, split_index)
-                else:
-                    write_time(save_time_format, split_index + 1)
-                time_list.append(save_time_format)
-                new_row()
-                time_list.clear()
+                if_final_time(time_list, save_time_format)
             elif len(time_list) < total_splits:
                 waiting = True
                 continue
         elif waiting:
             if len(time_list) == total_splits:
-                # split_index = current_split()
-                split_index = len(time_list) + nb_cols_before_split_sheets + 1
-                if is_pb(split_index, save_time_format):
-                    write_time(save_time_format, split_index)
-                else:
-                    write_time(save_time_format, split_index + 1)
-                time_list.append(save_time_format)
-                new_row()
-                time_list.clear()
+                if_final_time(time_list, save_time_format)
                 waiting = False
 
         # RESET
