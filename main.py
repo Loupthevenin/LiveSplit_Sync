@@ -51,7 +51,10 @@ def main():
             if len(time_list) == total_splits:
                 # split_index = current_split()
                 split_index = len(time_list) + nb_cols_before_split_sheets + 1
-                write_time(save_time_format, split_index)
+                if is_pb(split_index, save_time_format):
+                    write_time(save_time_format, split_index)
+                else:
+                    write_time(save_time_format, split_index + 1)
                 time_list.append(save_time_format)
                 new_row()
                 time_list.clear()
@@ -62,7 +65,10 @@ def main():
             if len(time_list) == total_splits:
                 # split_index = current_split()
                 split_index = len(time_list) + nb_cols_before_split_sheets + 1
-                write_time(save_time_format, split_index)
+                if is_pb(split_index, save_time_format):
+                    write_time(save_time_format, split_index)
+                else:
+                    write_time(save_time_format, split_index + 1)
                 time_list.append(save_time_format)
                 new_row()
                 time_list.clear()

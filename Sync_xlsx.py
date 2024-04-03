@@ -1,6 +1,6 @@
 import xlwings as xw
 from constants.configs import *
-from analyser import find_pb
+from analyser import convert_to_seconds
 
 
 # CONNECT EXCEL
@@ -53,9 +53,26 @@ def write_reset(reset_col):
     sheet.range((nb_row_edit, reset_col)).value = "RESET"
 
 
-def is_pb(index_col):
-    pb_values = sheet.col_values(index_col)
-    print(pb_values)
-    pb_values.pop(0)
-    if find_pb(pb_values) != 0:
-        pass
+def is_pb(index_col_pb, time_to_compare) -> bool:
+    pb_values = sheet.range((nb_row_edit, index_col_pb), (sheet.cells.last_cell.row, index_col_pb)).value
+    pb_values = [value for value in pb_values if value is not None]
+
+    if not pb_values:
+        return True
+    last_pb = pb_values.pop(0)
+    if int(convert_to_seconds(last_pb)) > int(convert_to_seconds(time_to_compare)):
+        return True
+    else:
+        return False
+
+
+total_col = how_many_split() + 3
+final_time = "1:01:10,80"
+if is_pb(total_col, final_time):
+    print("OUI")
+    write_time(final_time, total_col)
+else:
+    print("NON")
+    write_time(final_time, total_col + 1)
+
+new_row()

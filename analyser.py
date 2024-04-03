@@ -56,17 +56,11 @@ def convert_to_seconds(time_str):
     parts = time_str.split(":")
     seconds_parts = parts[-1].split(',')
 
+    # PROBlEME AVEC LES MILISECONDES
+
     seconds = int(parts[0]) * 3600 + int(parts[1]) * 60 + int(seconds_parts[0]) + int(seconds_parts[1]) / 100
 
     return seconds
-
-
-def find_pb(time_list):
-    seconds_list = [convert_to_seconds(time) for time in time_list]
-
-    pb_index = seconds_list.index(min(seconds_list))
-
-    return pb_index
 
 
 def get_delta_time(client):
