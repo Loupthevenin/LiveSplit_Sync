@@ -78,6 +78,11 @@ def get_delta_time(client):
         return data
 
 
+# Faire le get_time penser au format et decider si on garde le temps global ou si on garde le temps AU split
+def get_time(client):
+    pass
+
+
 def get_final_time(client):
     global unique_final_values
 

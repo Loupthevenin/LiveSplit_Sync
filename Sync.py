@@ -29,6 +29,7 @@ def new_row():
     sheet.insert_row([], index=nb_row_edit)
 
 
+# Modifier le write time pour considerer les 2 lignes à modifier et new_row + 1 penser a une colonne en plus etc
 def write_time(time, index_col) -> bool:
     try:
         sheet.update_cell(nb_row_edit, index_col, time)

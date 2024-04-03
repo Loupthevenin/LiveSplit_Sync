@@ -29,6 +29,7 @@ def new_row():
     sheet.api.Rows(nb_row_edit).Insert()
 
 
+# Modifier le write time pour considerer les 2 lignes à modifier et new_row + 1 penser a une colonne en plus etc
 def write_time(time, index_col) -> bool:
     try:
         sheet.range((nb_row_edit, index_col)).value = time

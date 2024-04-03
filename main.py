@@ -45,6 +45,7 @@ def main():
             # if split_index == current_split():
             if split_index == len(time_list) + nb_cols_before_split_sheets + 1:
                 if write_time(time_format, split_index):
+                    # ICI ajouter le getlastsplittime et le write si le split index > 0
                     time_list.append(time_format)
                 else:
                     write_time("-", split_index)
