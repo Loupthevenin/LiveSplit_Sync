@@ -13,6 +13,8 @@ def how_many_split() -> int:
 
     # Colonne supplémentaire necessaire pour le tableau ici 4 par defaut => coherence sur le sheets
     splits = len(splits) - nb_cols_total_head
+    if splits < 0:
+        print("WARNING ADD COLS", splits)
 
     return splits
 
@@ -54,6 +56,7 @@ def write_reset(reset_col):
 
 def is_pb(index_col_pb, time_to_compare) -> bool:
     pb_values = sheet.col_values(index_col_pb)
+
     if not pb_values:
         return True
     last_pb = pb_values.pop(0)

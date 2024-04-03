@@ -13,13 +13,14 @@ def how_many_split() -> int:
 
     # Colonne supplémentaire necessaire pour le tableau ici 4 par defaut => coherence sur le sheets
     splits = splits - nb_cols_total_head
+    if splits < 0:
+        print("WARNING ADD COLS", splits)
 
     return splits
 
 
 def current_split() -> int:
     values = sheet.range((nb_row_edit, 1)).end('right').column
-    print(values)
     return values + 1
 
 
@@ -64,15 +65,3 @@ def is_pb(index_col_pb, time_to_compare) -> bool:
         return True
     else:
         return False
-
-
-total_col = how_many_split() + 3
-final_time = "1:01:10,80"
-if is_pb(total_col, final_time):
-    print("OUI")
-    write_time(final_time, total_col)
-else:
-    print("NON")
-    write_time(final_time, total_col + 1)
-
-new_row()
