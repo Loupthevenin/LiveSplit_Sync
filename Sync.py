@@ -57,7 +57,7 @@ def write_reset(reset_col):
 def is_pb(index_col_pb, time_to_compare) -> bool:
     pb_values = sheet.col_values(index_col_pb)
 
-    if not pb_values:
+    if len(pb_values) <= 1:
         return True
     last_pb = pb_values.pop(0)
     if int(convert_to_seconds(last_pb)) > int(convert_to_seconds(time_to_compare)):

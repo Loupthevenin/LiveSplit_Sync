@@ -5,4 +5,4 @@ getcurrentrealtime = "getcurrentrealtime\r\n"
 gettimerphase = "getcurrenttimerphase\r\n"
 
 # TESTER LE PREVIOUS TIME
-getprevioussplittime = "getprevioussplittime\r\n"
+getlastsplittime = "getlastsplittime\r\n"

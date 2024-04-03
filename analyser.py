@@ -53,7 +53,8 @@ def convert_time_format(time_str):
 
 
 def convert_to_seconds(time_str):
-    parts = time_str.split(":")
+    parts = time_str.replace("'", "").split(":")
+    print(parts)
     seconds_parts = parts[-1].split(',')
 
     # PROBlEME AVEC LES MILISECONDES
