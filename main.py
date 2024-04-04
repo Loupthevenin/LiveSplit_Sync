@@ -1,9 +1,9 @@
 import datetime
 
+from configs.configs import *
 from connect import Connect
 from analyser import convert_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index
-from tools.sheets_tools.sync import *
-from configs.configs import *
+from tools.sheets_tools.sync_delta import *
 
 
 def if_final_time(time_list, save_time_format):
