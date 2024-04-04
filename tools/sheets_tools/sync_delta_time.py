@@ -19,8 +19,11 @@ def how_many_split() -> int:
     return splits
 
 
-def current_split() -> int:
-    values = sheet.row_values(nb_row_edit)
+def current_split(is_time=False) -> int:
+    if is_time:
+        values = sheet.row_values(nb_row_edit + 1)
+    else:
+        values = sheet.row_values(nb_row_edit)
     return len(values) + 1
 
 
@@ -31,9 +34,10 @@ def new_row():
 
 
 # Modifier le write time pour considerer les 2 lignes à modifier et new_row + 1 penser a une colonne en plus etc
-def write_time(delta_time, index_col, time=False) -> bool:
+def write_time(index_col, delta_time=False,  time=False) -> bool:
     try:
-        sheet.update_cell(nb_row_edit, index_col, delta_time)
+        if delta_time:
+            sheet.update_cell(nb_row_edit, index_col, delta_time)
         if time:
             sheet.update_cell((nb_row_edit + 1), index_col, time)
         return True
@@ -69,6 +73,7 @@ def write_reset(reset_col):
 
 def is_pb(index_col_pb, time_to_compare) -> bool:
     pb_values = sheet.col_values(index_col_pb)
+    pb_values = [value for value in pb_values if value.strip() and value.strip().lower() != 'pb']
 
     if len(pb_values) <= 1:
         return True

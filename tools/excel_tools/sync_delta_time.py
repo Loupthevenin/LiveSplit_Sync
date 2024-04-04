@@ -18,8 +18,11 @@ def how_many_split() -> int:
     return splits
 
 
-def current_split() -> int:
-    values = sheet.range((nb_row_edit, 1)).end('right').column
+def current_split(is_time=False) -> int:
+    if is_time:
+        values = sheet.range(((nb_row_edit + 1), 1)).end('right').column
+    else:
+        values = sheet.range((nb_row_edit, 1)).end('right').column
     return values + 1
 
 
@@ -28,9 +31,10 @@ def new_row():
     sheet.api.Rows(nb_row_edit).Insert()
 
 
-def write_time(delta_time, index_col, time=False) -> bool:
+def write_time(index_col, delta_time=False, time=False) -> bool:
     try:
-        sheet.range((nb_row_edit, index_col)).value = delta_time
+        if delta_time:
+            sheet.range((nb_row_edit, index_col)).value = delta_time
         if time:
             sheet.range(((nb_row_edit + 1), index_col)).value = time
         return True

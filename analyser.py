@@ -1,6 +1,7 @@
 from configs.order import *
 
 
+# Penser à capé le nombre d'éléments possible à mettre dans ces listes (exemple : on garde les 10 dernières valeurs)
 unique_delta_values = []
 unique_time_values = []
 unique_final_values = []
@@ -80,11 +81,14 @@ def get_delta_time(client):
 
 
 # Decider si on garde le temps global ou si on garde le temps AU split
+# Faire en sorte de trouver une echapatoire pour ne pas arreter le script
 def get_last_time(client):
     global unique_time_values
 
+    # Entre ici
     client.send_data(getlastsplittime)
     data = client.receive_data()
+    # Et ici
 
     if not unique_time_values or data != unique_time_values[-1]:
         unique_time_values.append(data)

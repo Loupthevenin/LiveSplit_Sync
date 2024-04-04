@@ -34,13 +34,13 @@ def if_final_time(time_list, save_time_format):
     # split_index = current_split()
     split_index = len(time_list) + nb_cols_before_split_sheets + 1
     if is_pb(split_index, save_time_format):
-        write_time(save_time_format, split_index)
+        write_time(delta_time=save_time_format, index_col=split_index)
         if VERSION in ["D+T+E", "D+T+S"]:
             write_time(time=save_time_format, index_col=split_index)
     else:
-        write_time(save_time_format, split_index + 1)
+        write_time(delta_time=save_time_format, index_col=(split_index + 1))
         if VERSION in ["D+T+E", "D+T+S"]:
-            write_time(time=save_time_format, index_col=split_index)
+            write_time(time=save_time_format, index_col=(split_index + 1))
     time_list.append(save_time_format)
     new_row()
     time_list.clear()
@@ -71,10 +71,10 @@ def main():
 
             split_index = int(get_split_index(client)) + nb_cols_before_split_sheets
             if split_index == len(time_list) + nb_cols_before_split_sheets + 1:
-                if write_time(time_format, split_index):
+                if write_time(delta_time=time_format, index_col=split_index):
                     time_list.append(time_format)
                 else:
-                    write_time("-", split_index)
+                    write_time(delta_time="-", index_col=split_index)
                     time_list.append(time_format)
             else:
                 print("Decalage avec le sheets")
@@ -82,14 +82,12 @@ def main():
         # SI je mets le last time dans le delta time => un decalage de 1 dans le classeur
         # LAST TIME
         if VERSION in ["D+T+E", "D+T+S"]:
-            split_index = int(get_split_index(client))
-            if split_index > 0:
+            index_split = int(get_split_index(client))
+            if index_split > 0:
                 last_time = get_last_time(client)
                 if last_time:
-                    # -1 car on est a + 1 au niveau du live split
-                    split_index += (nb_cols_before_split_sheets - 1)
                     last_time = convert_time_format(last_time)
-                    write_time(time=last_time, index_col=split_index)
+                    write_time(time=last_time, index_col=(current_split(is_time=True)))
 
         # FINAL TIME
         final_time = get_final_time(client)

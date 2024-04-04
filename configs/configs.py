@@ -4,8 +4,8 @@
 #####################
 #####################
 #####################
-VERSION_EXCEL = 1
-VERSION_SHEETS = 0
+VERSION_EXCEL = 0
+VERSION_SHEETS = 1
 
 VERSION_DELTA = 1
 VERSION_TIME = 1
@@ -56,5 +56,6 @@ PORT = 16834
 
 # PATH EXCEL
 #####################
-path_excel = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
+xls = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
+path_excel = r"G:\Loup\Python\Projet\LiveSplit_Sync\excel\run.xlsx"
 #####################
