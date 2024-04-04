@@ -1,4 +1,4 @@
-from constants.order import *
+from configs.order import *
 
 
 unique_delta_values = []

@@ -1,5 +1,5 @@
 from connect import workbook
-from constants.configs import *
+from configs.configs import *
 from analyser import convert_to_seconds
 
 

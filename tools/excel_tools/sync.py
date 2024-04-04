@@ -1,10 +1,10 @@
 import xlwings as xw
-from constants.configs import *
+from configs.configs import *
 from analyser import convert_to_seconds
 
 
 # CONNECT EXCEL
-path_file = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
+path_file = r"/excel/run.xlsx"
 sheet = xw.Book(path_file).sheets[index_worksheets]
 
 
