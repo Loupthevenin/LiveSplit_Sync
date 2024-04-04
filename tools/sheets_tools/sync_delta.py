@@ -3,8 +3,6 @@ from configs.configs import *
 from analyser import convert_to_seconds
 
 
-# sheets = map(lambda x: x.title, workbook.worksheets())
-
 sheet = workbook.get_worksheet(index_worksheets)
 
 
@@ -24,7 +22,6 @@ def current_split() -> int:
     return len(values) + 1
 
 
-# Ajouter l'ID dans new row car opti de l'API
 def new_row():
     sheet.insert_row([], index=nb_row_edit)
 

@@ -2,8 +2,32 @@ import datetime
 
 from configs.configs import *
 from connect import Connect
-from analyser import convert_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index
-from tools.sheets_tools.sync_delta import *
+from analyser import convert_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
+
+
+VERSION = ""
+
+
+if VERSION_SHEETS:
+    if (VERSION_DELTA + VERSION_TIME) > 1:
+        from tools.sheets_tools.sync_delta_time import *
+        VERSION = "D+T+S"
+    elif VERSION_DELTA:
+        from tools.sheets_tools.sync_delta import *
+        VERSION = "D+S"
+    else:
+        # autre sync_time ?
+        pass
+else:
+    if (VERSION_DELTA + VERSION_TIME) > 1:
+        from tools.excel_tools.sync_delta_time import *
+        VERSION = "D+T+E"
+    elif VERSION_DELTA:
+        from tools.excel_tools.sync_delta import *
+        VERSION = "D+E"
+    else:
+        # autre sync_time ?
+        pass
 
 
 def if_final_time(time_list, save_time_format):
@@ -11,8 +35,12 @@ def if_final_time(time_list, save_time_format):
     split_index = len(time_list) + nb_cols_before_split_sheets + 1
     if is_pb(split_index, save_time_format):
         write_time(save_time_format, split_index)
+        if VERSION in ["D+T+E", "D+T+S"]:
+            write_time(time=save_time_format, index_col=split_index)
     else:
         write_time(save_time_format, split_index + 1)
+        if VERSION in ["D+T+E", "D+T+S"]:
+            write_time(time=save_time_format, index_col=split_index)
     time_list.append(save_time_format)
     new_row()
     time_list.clear()
@@ -42,10 +70,8 @@ def main():
             print(time_format)
 
             split_index = int(get_split_index(client)) + nb_cols_before_split_sheets
-            # if split_index == current_split():
             if split_index == len(time_list) + nb_cols_before_split_sheets + 1:
                 if write_time(time_format, split_index):
-                    # ICI ajouter le getlastsplittime et le write si le split index > 0
                     time_list.append(time_format)
                 else:
                     write_time("-", split_index)
@@ -53,13 +79,24 @@ def main():
             else:
                 print("Decalage avec le sheets")
 
+        # SI je mets le last time dans le delta time => un decalage de 1 dans le classeur
+        # LAST TIME
+        if VERSION in ["D+T+E", "D+T+S"]:
+            split_index = int(get_split_index(client))
+            if split_index > 0:
+                last_time = get_last_time(client)
+                if last_time:
+                    # -1 car on est a + 1 au niveau du live split
+                    split_index += (nb_cols_before_split_sheets - 1)
+                    last_time = convert_time_format(last_time)
+                    write_time(time=last_time, index_col=split_index)
+
         # FINAL TIME
         final_time = get_final_time(client)
         if final_time:
             time_format = convert_time_format(final_time)
             save_time_format = time_format
             print(time_format)
-            # total_split = (current_split() - nb_cols_before_split_sheets - 1)
 
             if len(time_list) == total_splits:
                 if_final_time(time_list, save_time_format)

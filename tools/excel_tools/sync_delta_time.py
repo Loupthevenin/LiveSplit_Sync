@@ -28,11 +28,11 @@ def new_row():
     sheet.api.Rows(nb_row_edit).Insert()
 
 
-# penser a une colonne en plus etc
-def write_time(delta_time, time, index_col) -> bool:
+def write_time(delta_time, index_col, time=False) -> bool:
     try:
         sheet.range((nb_row_edit, index_col)).value = delta_time
-        sheet.range(((nb_row_edit + 1), index_col)).value = time
+        if time:
+            sheet.range(((nb_row_edit + 1), index_col)).value = time
         return True
     except:
         return False

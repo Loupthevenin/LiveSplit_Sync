@@ -2,6 +2,7 @@ from configs.order import *
 
 
 unique_delta_values = []
+unique_time_values = []
 unique_final_values = []
 unique_timer_phase_value_reset = [""]
 unique_timer_phase_value_start = [""]
@@ -78,9 +79,18 @@ def get_delta_time(client):
         return data
 
 
-# Faire le get_time penser au format et decider si on garde le temps global ou si on garde le temps AU split
-def get_time(client):
-    pass
+# Decider si on garde le temps global ou si on garde le temps AU split
+def get_last_time(client):
+    global unique_time_values
+
+    client.send_data(getlastsplittime)
+    data = client.receive_data()
+
+    if not unique_time_values or data != unique_time_values[-1]:
+        unique_time_values.append(data)
+        return data
+    else:
+        return False
 
 
 def get_final_time(client):
