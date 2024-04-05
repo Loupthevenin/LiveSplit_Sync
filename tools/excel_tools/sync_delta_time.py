@@ -74,7 +74,7 @@ def is_pb(index_col_pb, time_to_compare) -> bool:
 
     if not pb_values:
         return True
-    last_pb = pb_values.pop(0)
+    last_pb = pb_values[0]
     if int(convert_to_seconds(last_pb)) > int(convert_to_seconds(time_to_compare)):
         return True
     else:
