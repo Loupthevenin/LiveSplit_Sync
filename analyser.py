@@ -59,7 +59,7 @@ def convert_time_format(time_str):
     return f"'{time_diff}{hours}:{minutes}:{seconds},{miliseconds}"
 
 
-def convert_to_seconds(time_str):
+def convert_to_seconds(time_str) -> float:
     parts = time_str.replace("'", "").split(":")
     print(parts)
     seconds_parts = parts[-1].split(',')
@@ -69,6 +69,15 @@ def convert_to_seconds(time_str):
     seconds = int(parts[0]) * 3600 + int(parts[1]) * 60 + int(seconds_parts[0]) + int(seconds_parts[1]) / 100
 
     return seconds
+
+
+def convert_seconds_to_time_format(seconds) -> str:
+    hours = int(seconds // 3600)
+    minutes = int(seconds % 3600 // 60)
+    seconds_remainder = int(seconds % 60)
+    centiseconds = round((seconds - int(seconds)) * 100)
+
+    return f"'{hours}:{minutes}:{seconds_remainder},{centiseconds}"
 
 
 def get_delta_time(client):
