@@ -82,7 +82,7 @@ def get_delta_time(client):
 
     if not unique_delta_values or data != unique_delta_values[-1]:
         unique_delta_values.append(data)
-        delete_value(unique_delta_values)
+        unique_delta_values = delete_value(unique_delta_values)
         return data
 
 
@@ -98,7 +98,7 @@ def get_last_time(client):
 
     if not unique_time_values or data != unique_time_values[-1]:
         unique_time_values.append(data)
-        delete_value(unique_time_values)
+        unique_time_values = delete_value(unique_time_values)
         return data
     else:
         return False
@@ -115,7 +115,7 @@ def get_final_time(client):
 
     if not unique_final_values or data != unique_final_values[-1]:
         unique_final_values.append(data)
-        delete_value(unique_final_values)
+        unique_final_values = delete_value(unique_final_values)
         return data
 
 
@@ -127,19 +127,19 @@ def get_timer_phase(client, reset=False, start=False):
 
     if data == "NotRunning" and unique_timer_phase_value_reset[-1] == "Running" and reset:
         unique_timer_phase_value_reset.append(data)
-        delete_value(unique_timer_phase_value_reset)
+        unique_timer_phase_value_reset = delete_value(unique_timer_phase_value_reset)
         return True
     elif data == "Running" and unique_timer_phase_value_start[-1] == "NotRunning" and start:
         unique_timer_phase_value_start.append(data)
-        delete_value(unique_timer_phase_value_start)
+        unique_timer_phase_value_start = delete_value(unique_timer_phase_value_start)
         return True
     elif reset:
         unique_timer_phase_value_reset.append(data)
-        delete_value(unique_timer_phase_value_reset)
+        unique_timer_phase_value_reset = delete_value(unique_timer_phase_value_reset)
         return False
     elif start:
         unique_timer_phase_value_start.append(data)
-        delete_value(unique_timer_phase_value_start)
+        unique_timer_phase_value_start = delete_value(unique_timer_phase_value_start)
         return False
 
 
