@@ -8,13 +8,13 @@ unique_timer_phase_value_reset = [""]
 unique_timer_phase_value_start = [""]
 
 
-def delete_value(values_list):
+def delete_value(values_list) -> list:
     nb_size = 20
     values_list = values_list[-nb_size:]
     return values_list
 
 
-def convert_time_format(time_str):
+def convert_time_format(time_str) -> str:
 
     if "-" in time_str:
         time_str = time_str.replace("-", "")
@@ -78,14 +78,14 @@ def convert_seconds_to_time_format(seconds) -> str:
     return f"'{hours}:{minutes}:{seconds_remainder},{centiseconds}"
 
 
-def get_delta_time(client):
+def get_delta_time(client) -> str:
     global unique_delta_values
 
     client.send_data(getdelta)
     data = client.receive_data()
 
     if data == '-':
-        return False
+        return ""
 
     if not unique_delta_values or data != unique_delta_values[-1]:
         unique_delta_values.append(data)
@@ -93,7 +93,7 @@ def get_delta_time(client):
         return data
 
 
-def get_last_time(client):
+def get_last_time(client) -> str:
     global unique_time_values
 
     client.send_data(getlastsplittime)
@@ -103,18 +103,18 @@ def get_last_time(client):
         unique_time_values.append(data)
         unique_time_values = delete_value(unique_time_values)
         return data
-    else:
-        return False
+
+    return ""
 
 
-def get_final_time(client):
+def get_final_time(client) -> str:
     global unique_final_values
 
     client.send_data(getfinaltime_comp)
     data = client.receive_data()
 
     if data == "0.00.00":
-        return False
+        return ""
 
     if not unique_final_values or data != unique_final_values[-1]:
         unique_final_values.append(data)
@@ -122,7 +122,7 @@ def get_final_time(client):
         return data
 
 
-def get_timer_phase(client, reset=False, start=False):
+def get_timer_phase(client, reset=False, start=False) -> bool:
     global unique_timer_phase_value_reset, unique_timer_phase_value_start
 
     client.send_data(gettimerphase)
@@ -146,11 +146,11 @@ def get_timer_phase(client, reset=False, start=False):
         return False
 
 
-def get_split_index(client):
+def get_split_index(client) -> str:
     client.send_data(getsplitindex)
     data = client.receive_data()
 
     if data:
         return data
-    else:
-        return False
+
+    return ""
