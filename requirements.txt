@@ -1,2 +1,3 @@
 gspread~=6.0.2
 xlwings~=0.31.0
+pyside6~=6.6.3.1
