@@ -56,6 +56,5 @@ PORT = 16834
 
 # PATH EXCEL
 #####################
-xls = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
 path_excel = r"G:\Loup\Python\Projet\LiveSplit_Sync\excel\run.xlsx"
 #####################

@@ -1,4 +1,4 @@
-from configs.order import *
+from app.configs.order import *
 
 
 unique_delta_values = []

@@ -1,5 +1,5 @@
 import xlwings as xw
-from configs.configs import *
+from app.configs.settings import *
 from analyser import convert_to_seconds
 
 

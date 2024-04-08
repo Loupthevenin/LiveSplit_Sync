@@ -1,6 +1,6 @@
 import datetime
 
-from configs.configs import *
+from app.configs.settings import *
 from connect import Connect
 from analyser import convert_time_format, convert_seconds_to_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
 
