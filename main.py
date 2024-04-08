@@ -66,7 +66,6 @@ def main():
 
         # DELTA TIME
         delta_time = get_delta_time(client)
-
         if delta_time:
             time_format = convert_time_format(delta_time)
             print(time_format)
@@ -80,7 +79,6 @@ def main():
             else:
                 print("Decalage avec le sheets")
 
-        # SI je mets le last time dans le delta time => un decalage de 1 dans le classeur
         # LAST TIME
         if VERSION in ["D+T+E", "D+T+S"]:
             index_split = int(get_split_index(client))

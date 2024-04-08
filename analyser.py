@@ -64,8 +64,6 @@ def convert_to_seconds(time_str) -> float:
     print(parts)
     seconds_parts = parts[-1].split(',')
 
-    # PROBlEME AVEC LES MILISECONDES
-
     seconds = int(parts[0]) * 3600 + int(parts[1]) * 60 + int(seconds_parts[0]) + int(seconds_parts[1]) / 100
 
     return seconds
@@ -95,7 +93,6 @@ def get_delta_time(client):
         return data
 
 
-# Decider si on garde le temps global ou si on garde le temps AU split
 # Faire en sorte de trouver une echappatoire pour ne pas arreter le script
 def get_last_time(client):
     global unique_time_values
