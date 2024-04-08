@@ -4,8 +4,8 @@
 #####################
 #####################
 #####################
-VERSION_EXCEL = 0
-VERSION_SHEETS = 1
+VERSION_EXCEL = 1
+VERSION_SHEETS = 0
 
 VERSION_DELTA = 1
 VERSION_TIME = 1

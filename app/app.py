@@ -1,5 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtWidgets import QLineEdit, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QSpacerItem, QSizePolicy, QFileDialog
+from PySide6.QtWidgets import QLineEdit, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QSpacerItem, QSizePolicy, QFileDialog, QDialog, QGroupBox
 from PySide6.QtCore import Qt
 
 
@@ -16,6 +16,36 @@ class FileExplorerLineEdit(QLineEdit):
         file_path, _ = QFileDialog.getOpenFileName(self, "Sélectionner un fichier Excel", "", "Tous les fichiers (*)")
         if file_path:
             self.setText(file_path)
+
+
+class SettingsDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Settings")
+
+        layout = QVBoxLayout()
+
+        general_settings_group = QGroupBox("General Settings")
+        general_settings_layout = QFormLayout()
+
+        # modifier en consequence dans le settings.py
+        general_settings_layout.addRow("Server IP:", QLineEdit())
+        general_settings_layout.addRow("Port:", QLineEdit())
+        general_settings_layout.addRow("Excel File:", QLineEdit())
+        general_settings_layout.addRow("Sheet ID:", QLineEdit())
+
+        general_settings_group.setLayout(general_settings_layout)
+        layout.addWidget(general_settings_group)
+
+        layout.addWidget(QPushButton("Save"))
+
+        self.setLayout(layout)
+
+    def save_settings(self):
+        pass
+
+    def load_settings(self):
+        pass
 
 
 class App(QtWidgets.QWidget):
@@ -57,7 +87,7 @@ class App(QtWidgets.QWidget):
         form_layout.addRow(excel_path_label)
         form_layout.addRow(file_textbox)
 
-        # Sheets
+        # Sheets //// Ajouter un copy pour copier l'adresse mail du BOT egalement un petit (i) pout expliquer brievement comment ca va fonctionner
         sheet_id_label = QLabel("Sheet ID:")
         sheet_id_textbox = QLineEdit()
         sheet_id_textbox.setMaximumWidth(400)
@@ -79,7 +109,16 @@ class App(QtWidgets.QWidget):
         button_layout.addStretch()
         layout.addLayout(button_layout)
 
+        # Sttings button
+        settings_button = QPushButton("Settings")
+        settings_button.clicked.connect(self.open_settings)
+        layout.addWidget(settings_button)
+
         self.setLayout(layout)
+
+    def open_settings(self):
+        settings_dialog = SettingsDialog(self)
+        settings_dialog.exec()
 
     def save_config(self):
         pass

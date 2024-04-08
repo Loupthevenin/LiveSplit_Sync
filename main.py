@@ -89,7 +89,7 @@ def main():
                     if time_split_list:
                         last_time_seconds = convert_to_seconds(last_time)
                         last_previous_time_seconds = convert_to_seconds(time_split_list[-1])
-                        last_time = convert_seconds_to_time_format((round(last_time_seconds - last_previous_time_seconds), 2))
+                        last_time = convert_seconds_to_time_format(round((last_time_seconds - last_previous_time_seconds), 2))
                     write_time(time=last_time, index_col=(current_split(is_time=True)))
                     time_split_list.append(last_time)
                 elif len(delta_time_list) > len(time_split_list):
