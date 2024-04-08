@@ -13,11 +13,16 @@ class Connect:
         self.sock.connect((self.server_ip, self.port))
         print('Connecté au serv')
 
-    def receive_data(self):
-        data = self.sock.recv(1024)
-        if data:
-            data = data.decode("utf-8").replace("\r\n", "").replace("−", "-")
-            return data
+    def receive_data(self, timeout=None) -> str:
+        self.sock.settimeout(timeout)
+        try:
+            data = self.sock.recv(1024)
+            if data:
+                data = data.decode("utf-8").replace("\r\n", "").replace("−", "-")
+                return data
+        except socket.timeout:
+            print('Reception des données last_time expire')
+            return ""
 
     def send_data(self, message):
         self.sock.send(message.encode('utf-8'))

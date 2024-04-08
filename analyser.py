@@ -93,14 +93,11 @@ def get_delta_time(client):
         return data
 
 
-# Faire en sorte de trouver une echappatoire pour ne pas arreter le script
 def get_last_time(client):
     global unique_time_values
 
-    # Entre ici
     client.send_data(getlastsplittime)
-    data = client.receive_data()
-    # Et ici
+    data = client.receive_data(timeout=3)
 
     if not unique_time_values or data != unique_time_values[-1]:
         unique_time_values.append(data)
