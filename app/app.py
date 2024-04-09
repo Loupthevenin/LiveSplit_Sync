@@ -6,9 +6,10 @@ import json
 
 
 class FileExplorerLineEdit(QLineEdit):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, text=""):
         super().__init__(parent)
         self.setReadOnly(True)
+        self.setText(text)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -36,10 +37,10 @@ class SettingsDialog(QDialog):
         versions_settings_group = QGroupBox("Versions Settings")
         versions_settings_layout = QFormLayout()
 
-        self.excel_version = QCheckBox()
-        self.sheets_version = QCheckBox()
-        self.delta_version = QCheckBox()
-        self.time_version = QCheckBox()
+        self.excel_version = QCheckBox(checked=(True if self.settings_json["VERSION"]["VERSION_EXCEL"] == "1" else False))
+        self.sheets_version = QCheckBox(checked=(True if self.settings_json["VERSION"]["VERSION_SHEETS"] == "1" else False))
+        self.delta_version = QCheckBox(checked=(True if self.settings_json["VERSION"]["VERSION_DELTA"] == "1" else False))
+        self.time_version = QCheckBox(checked=(True if self.settings_json["VERSION"]["VERSION_TIME"] == "1" else False))
 
         versions_settings_layout.addRow("Excel version:", self.excel_version)
         versions_settings_layout.addRow("Sheets version:", self.sheets_version)
@@ -52,16 +53,16 @@ class SettingsDialog(QDialog):
         table_settings_group = QGroupBox("Table Settings")
         table_settings_layout = QFormLayout()
 
-        self.index_worksheet = QLineEdit(None, validator=QIntValidator())
-        self.row_edit = QLineEdit(None, validator=QIntValidator())
-        self.row_head = QLineEdit(None, validator=QIntValidator())
-        self.cols_before_split = QLineEdit(None, validator=QIntValidator())
-        self.cols_total = QLineEdit(None, validator=QIntValidator())
-        self.col_ID = QLineEdit(None, validator=QIntValidator())
-        self.col_date = QLineEdit(None, validator=QIntValidator())
-        self.col_type = QLineEdit(None, validator=QIntValidator())
+        self.index_worksheets = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["index_worksheets"])
+        self.row_edit = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["nb_row_edit"])
+        self.row_head = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["nb_row_head"])
+        self.cols_before_split = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["nb_cols_before_split_sheets"])
+        self.cols_total = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["nb_cols_total_head"])
+        self.col_ID = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["col_ID"])
+        self.col_date = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["col_date"])
+        self.col_type = QLineEdit(None, validator=QIntValidator(), text=self.settings_json["TABLE"]["col_type"])
 
-        table_settings_layout.addRow("Worksheet index:", self.index_worksheet)
+        table_settings_layout.addRow("Worksheet index:", self.index_worksheets)
         table_settings_layout.addRow("Row edit:", self.row_edit)
         table_settings_layout.addRow("Row head:", self.row_head)
         table_settings_layout.addRow("Cols before split:", self.cols_before_split)
@@ -80,7 +81,7 @@ class SettingsDialog(QDialog):
         self.setLayout(layout)
 
     def save_button_clicked(self):
-        index_worksheet = self.index_worksheet
+        index_worksheet = self.index_worksheets
         row_edit = self.row_edit
         row_head = self.row_head
         cols_before_split = self.cols_before_split
@@ -95,7 +96,17 @@ class SettingsDialog(QDialog):
 
     def load_settings(self) -> dict:
         with open("configs/settings.json", "r") as f:
-            return json.load(f)
+            settings = json.load(f)
+            return self.convert_to_str(settings)
+
+    def convert_to_str(self, settings: dict) -> dict:
+        str_settings = {}
+        for key, value in settings.items():
+            if isinstance(value, dict):
+                str_settings[key] = self.convert_to_str(value)
+            else:
+                str_settings[key] = str(value)
+        return str_settings
 
 
 class App(QtWidgets.QWidget):
@@ -116,8 +127,8 @@ class App(QtWidgets.QWidget):
         config_group = QGroupBox("Configuration")
         config_layout = QFormLayout()
 
-        self.server_ip = QLineEdit()
-        self.port = QLineEdit()
+        self.server_ip = QLineEdit(text=self.settings_json["SERVER"]["SERVER_IP"])
+        self.port = QLineEdit(text=self.settings_json["SERVER"]["PORT"])
 
         config_layout.addRow("Server IP:", self.server_ip)
         config_layout.addRow("Port:", self.port)
@@ -128,8 +139,8 @@ class App(QtWidgets.QWidget):
         table_group = QGroupBox("Ou ?")
         table_layout = QFormLayout()
 
-        self.excel = FileExplorerLineEdit()
-        self.sheets = QLineEdit()
+        self.excel = FileExplorerLineEdit(text=self.settings_json["PATH"]["path_excel"])
+        self.sheets = QLineEdit(text=self.settings_json["PATH"]["sheet_id"])
 
         table_layout.addRow("Fichier Excel:", self.excel)
         table_layout.addRow("Sheet ID:", self.sheets)
@@ -183,7 +194,17 @@ class App(QtWidgets.QWidget):
 
     def load_settings(self) -> dict:
         with open("configs/settings.json", "r") as f:
-            return json.load(f)
+            settings = json.load(f)
+            return self.convert_to_str(settings)
+
+    def convert_to_str(self, settings: dict) -> dict:
+        str_settings = {}
+        for key, value in settings.items():
+            if isinstance(value, dict):
+                str_settings[key] = self.convert_to_str(value)
+            else:
+                str_settings[key] = str(value)
+        return str_settings
 
 
 app = QtWidgets.QApplication([])
