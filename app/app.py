@@ -36,10 +36,15 @@ class SettingsDialog(QDialog):
         versions_settings_group = QGroupBox("Versions Settings")
         versions_settings_layout = QFormLayout()
 
-        versions_settings_layout.addRow("Excel version:", QCheckBox())
-        versions_settings_layout.addRow("Sheets version:", QCheckBox())
-        versions_settings_layout.addRow("Delta:", QCheckBox())
-        versions_settings_layout.addRow("Time", QCheckBox())
+        self.excel_version = QCheckBox()
+        self.sheets_version = QCheckBox()
+        self.delta_version = QCheckBox()
+        self.time_version = QCheckBox()
+
+        versions_settings_layout.addRow("Excel version:", self.excel_version)
+        versions_settings_layout.addRow("Sheets version:", self.sheets_version)
+        versions_settings_layout.addRow("Delta:", self.delta_version)
+        versions_settings_layout.addRow("Time", self.time_version)
 
         versions_settings_group.setLayout(versions_settings_layout)
         layout.addWidget(versions_settings_group)
@@ -47,21 +52,42 @@ class SettingsDialog(QDialog):
         table_settings_group = QGroupBox("Table Settings")
         table_settings_layout = QFormLayout()
 
-        table_settings_layout.addRow("Worksheet index:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Row edit:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Row head:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Cols before split:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Cols total:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Col ID:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Col date:", QLineEdit(None, validator=QIntValidator()))
-        table_settings_layout.addRow("Col type:", QLineEdit(None, validator=QIntValidator()))
+        self.index_worksheet = QLineEdit(None, validator=QIntValidator())
+        self.row_edit = QLineEdit(None, validator=QIntValidator())
+        self.row_head = QLineEdit(None, validator=QIntValidator())
+        self.cols_before_split = QLineEdit(None, validator=QIntValidator())
+        self.cols_total = QLineEdit(None, validator=QIntValidator())
+        self.col_ID = QLineEdit(None, validator=QIntValidator())
+        self.col_date = QLineEdit(None, validator=QIntValidator())
+        self.col_type = QLineEdit(None, validator=QIntValidator())
+
+        table_settings_layout.addRow("Worksheet index:", self.index_worksheet)
+        table_settings_layout.addRow("Row edit:", self.row_edit)
+        table_settings_layout.addRow("Row head:", self.row_head)
+        table_settings_layout.addRow("Cols before split:", self.cols_before_split)
+        table_settings_layout.addRow("Cols total:", self.cols_total)
+        table_settings_layout.addRow("Col ID:", self.col_ID)
+        table_settings_layout.addRow("Col date:", self.col_date)
+        table_settings_layout.addRow("Col type:", self.col_type)
 
         table_settings_group.setLayout(table_settings_layout)
         layout.addWidget(table_settings_group)
 
-        layout.addWidget(QPushButton("Save"))
+        save_button = QPushButton("Save")
+        save_button.clicked.connect(self.save_button_clicked)
+        layout.addWidget(save_button)
 
         self.setLayout(layout)
+
+    def save_button_clicked(self):
+        index_worksheet = self.index_worksheet
+        row_edit = self.row_edit
+        row_head = self.row_head
+        cols_before_split = self.cols_before_split
+        cols_total = self.cols_total
+        col_ID = self.col_ID
+        col_date = self.col_date
+        col_type = self.col_type
 
     def save_settings(self, data: dict):
         with open("configs/settings.json", "w") as f:
@@ -89,23 +115,34 @@ class App(QtWidgets.QWidget):
         # Config ip + port
         config_group = QGroupBox("Configuration")
         config_layout = QFormLayout()
-        config_layout.addRow("Server IP:", QLineEdit())
-        config_layout.addRow("Port:", QLineEdit())
+
+        self.server_ip = QLineEdit()
+        self.port = QLineEdit()
+
+        config_layout.addRow("Server IP:", self.server_ip)
+        config_layout.addRow("Port:", self.port)
         config_group.setLayout(config_layout)
         layout.addWidget(config_group)
 
         # OU
         table_group = QGroupBox("Ou ?")
         table_layout = QFormLayout()
-        table_layout.addRow("Fichier Excel:", FileExplorerLineEdit())
-        table_layout.addRow("Sheet ID:", QLineEdit())
+
+        self.excel = FileExplorerLineEdit()
+        self.sheets = QLineEdit()
+
+        table_layout.addRow("Fichier Excel:", self.excel)
+        table_layout.addRow("Sheet ID:", self.sheets)
         table_group.setLayout(table_layout)
         layout.addWidget(table_group)
 
         # Save
         save_layout = QFormLayout()
 
-        save_layout.addRow(QPushButton("Sauvegarde"))
+        save_button = QPushButton("Sauvegarde")
+        save_button.clicked.connect(self.save_button_clicked)
+
+        save_layout.addRow(save_button)
         layout.addLayout(save_layout)
 
         # SE CONNECTER
@@ -128,6 +165,17 @@ class App(QtWidgets.QWidget):
     def open_settings(self):
         settings_dialog = SettingsDialog(self)
         settings_dialog.exec()
+
+    def save_button_clicked(self):
+        server_ip = self.server_ip.text()
+        port = int(self.port.text())
+        excel = self.excel.text()
+        sheets = self.sheets.text()
+
+        print("server ip", server_ip)
+        print("port", port)
+        print("excel", excel)
+        print("sheets", sheets)
 
     def save_settings(self, data: dict):
         with open("configs/settings.json", "w") as f:
