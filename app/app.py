@@ -1,6 +1,8 @@
 from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtWidgets import QLineEdit, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QSpacerItem, QSizePolicy, QFileDialog, QDialog, QGroupBox
+from PySide6.QtWidgets import QLineEdit, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QSpacerItem, QSizePolicy, QFileDialog, QDialog, QGroupBox, QCheckBox
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIntValidator
+import json
 
 
 class FileExplorerLineEdit(QLineEdit):
@@ -25,17 +27,31 @@ class SettingsDialog(QDialog):
 
         layout = QVBoxLayout()
 
-        general_settings_group = QGroupBox("General Settings")
-        general_settings_layout = QFormLayout()
+        versions_settings_group = QGroupBox("Versions Settings")
+        versions_settings_layout = QFormLayout()
 
-        # modifier en consequence dans le settings.py
-        general_settings_layout.addRow("Server IP:", QLineEdit())
-        general_settings_layout.addRow("Port:", QLineEdit())
-        general_settings_layout.addRow("Excel File:", QLineEdit())
-        general_settings_layout.addRow("Sheet ID:", QLineEdit())
+        versions_settings_layout.addRow("Excel version:", QCheckBox())
+        versions_settings_layout.addRow("Sheets version:", QCheckBox())
+        versions_settings_layout.addRow("Delta:", QCheckBox())
+        versions_settings_layout.addRow("Time", QCheckBox())
 
-        general_settings_group.setLayout(general_settings_layout)
-        layout.addWidget(general_settings_group)
+        versions_settings_group.setLayout(versions_settings_layout)
+        layout.addWidget(versions_settings_group)
+
+        table_settings_group = QGroupBox("Table Settings")
+        table_settings_layout = QFormLayout()
+
+        table_settings_layout.addRow("Worksheet index:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Row edit:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Row head:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Cols before split:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Cols total:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Col ID:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Col date:", QLineEdit(None, validator=QIntValidator()))
+        table_settings_layout.addRow("Col type:", QLineEdit(None, validator=QIntValidator()))
+
+        table_settings_group.setLayout(table_settings_layout)
+        layout.addWidget(table_settings_group)
 
         layout.addWidget(QPushButton("Save"))
 
@@ -45,7 +61,9 @@ class SettingsDialog(QDialog):
         pass
 
     def load_settings(self):
-        pass
+        with open("configs.settings.json", "r") as f:
+            dict_settings = json.load(f)
+            return
 
 
 class App(QtWidgets.QWidget):
