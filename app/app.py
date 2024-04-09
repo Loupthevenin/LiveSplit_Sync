@@ -23,6 +23,12 @@ class FileExplorerLineEdit(QLineEdit):
 class SettingsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.settings_json = self.load_settings()
+
+        self.settings_ui()
+
+    def settings_ui(self):
         self.setWindowTitle("Settings")
 
         layout = QVBoxLayout()
@@ -57,18 +63,20 @@ class SettingsDialog(QDialog):
 
         self.setLayout(layout)
 
-    def save_settings(self):
-        pass
+    def save_settings(self, data: dict):
+        with open("configs/settings.json", "w") as f:
+            json.dump(data, f, indent=4)
 
-    def load_settings(self):
-        with open("configs.settings.json", "r") as f:
-            dict_settings = json.load(f)
-            return
+    def load_settings(self) -> dict:
+        with open("configs/settings.json", "r") as f:
+            return json.load(f)
 
 
 class App(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+
+        self.settings_json = self.load_settings()
 
         self.init_ui()
 
@@ -78,44 +86,27 @@ class App(QtWidgets.QWidget):
         layout = QVBoxLayout()
         layout.setSpacing(20)
 
-        # 1) Title
-        title_network_label = QLabel("Configuration")
-        title_network_label.setMaximumHeight(50)
-        layout.addWidget(title_network_label)
+        # Config ip + port
+        config_group = QGroupBox("Configuration")
+        config_layout = QFormLayout()
+        config_layout.addRow("Server IP:", QLineEdit())
+        config_layout.addRow("Port:", QLineEdit())
+        config_group.setLayout(config_layout)
+        layout.addWidget(config_group)
 
-        form_layout = QFormLayout()
-
-        # IP
-        ip_label = QLabel("Server IP:")
-        ip_textbox = QLineEdit()
-        ip_textbox.setMaximumWidth(100)
-        form_layout.addRow(ip_label, ip_textbox)
-        # PORT
-        port_label = QLabel("Port:")
-        port_textbox = QLineEdit()
-        port_textbox.setMaximumWidth(100)
-        form_layout.addRow(port_label, port_textbox)
-
-        layout.addLayout(form_layout)
-
-        # Excel
-        excel_path_label = QLabel("Fichier Excel:")
-        file_textbox = FileExplorerLineEdit()
-        file_textbox.setMaximumWidth(400)
-        form_layout.addRow(excel_path_label)
-        form_layout.addRow(file_textbox)
-
-        # Sheets //// Ajouter un copy pour copier l'adresse mail du BOT egalement un petit (i) pout expliquer brievement comment ca va fonctionner
-        sheet_id_label = QLabel("Sheet ID:")
-        sheet_id_textbox = QLineEdit()
-        sheet_id_textbox.setMaximumWidth(400)
-        form_layout.addRow(sheet_id_label)
-        form_layout.addRow(sheet_id_textbox)
+        # OU
+        table_group = QGroupBox("Ou ?")
+        table_layout = QFormLayout()
+        table_layout.addRow("Fichier Excel:", FileExplorerLineEdit())
+        table_layout.addRow("Sheet ID:", QLineEdit())
+        table_group.setLayout(table_layout)
+        layout.addWidget(table_group)
 
         # Save
-        save_button = QPushButton("Sauvegarde")
-        save_button.setFixedSize(80, 40)
-        form_layout.addRow(save_button)
+        save_layout = QFormLayout()
+
+        save_layout.addRow(QPushButton("Sauvegarde"))
+        layout.addLayout(save_layout)
 
         # SE CONNECTER
         button_layout = QHBoxLayout()
@@ -138,8 +129,13 @@ class App(QtWidgets.QWidget):
         settings_dialog = SettingsDialog(self)
         settings_dialog.exec()
 
-    def save_config(self):
-        pass
+    def save_settings(self, data: dict):
+        with open("configs/settings.json", "w") as f:
+            json.dump(data, f, indent=4)
+
+    def load_settings(self) -> dict:
+        with open("configs/settings.json", "r") as f:
+            return json.load(f)
 
 
 app = QtWidgets.QApplication([])
