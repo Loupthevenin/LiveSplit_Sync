@@ -1,5 +1,6 @@
 import socket
 import gspread
+from app.configs.settings import sheet_id
 from google.oauth2.service_account import Credentials
 
 
@@ -38,5 +39,4 @@ scopes = [
 creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
 client = gspread.authorize(creds)
 
-sheet_id = "14v8vv4tpFQh4PYhelx6EI2fDA5FPhbWTVX7d6gIyOf0"
 workbook = client.open_by_key(sheet_id)

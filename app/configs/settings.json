@@ -1,0 +1,26 @@
+{
+  "VERSION": {
+    "VERSION_EXCEL": 1,
+    "VERSION_SHEETS": 0,
+    "VERSION_DELTA": 1,
+    "VERSION_TIME": 1
+  },
+  "SERVER": {
+    "SERVER_IP": "127.168.1.27",
+    "PORT": 16834
+  },
+  "TABLE": {
+    "nb_row_edit": 3,
+    "nb_row_head": 1,
+    "nb_cols_before_split_sheets": 3,
+    "nb_cols_total_head": 5,
+    "index_worksheets": 1,
+    "col_ID": 1,
+    "col_date": 2,
+    "col_type": 3
+  },
+  "PATH": {
+    "path_excel": "G:\\Loup\\Python\\Projet\\LiveSplit_Sync\\excel\\run.xlsx",
+    "sheet_id": "14v8vv4tpFQh4PYhelx6EI2fDA5FPhbWTVX7d6gIyOf0"
+  }
+}
