@@ -75,16 +75,12 @@ class App(QtWidgets.QWidget):
         settings_dialog.exec()
 
     def save_button_clicked(self):
-        # LES 2 SAVEs BUTTONs A FAIRE
-        server_ip = self.server_ip.text()
-        port = int(self.port.text())
-        excel = self.excel.text()
-        sheets = self.sheets.text()
+        self.settings_json["SERVER"]["SERVER_IP"] = self.server_ip.text()
+        self.settings_json["SERVER"]["PORT"] = int(self.port.text())
+        self.settings_json["PATH"]["path_excel"] = self.excel.text()
+        self.settings_json["PATH"]["sheet_id"] = self.sheets.text()
 
-        print("server ip", server_ip)
-        print("port", port)
-        print("excel", excel)
-        print("sheets", sheets)
+        self.save_settings(self.settings_json)
 
     def save_settings(self, data: dict):
         with open("configs/settings.json", "w") as f:
@@ -98,10 +94,15 @@ class App(QtWidgets.QWidget):
     def convert_to_str(self, settings: dict) -> dict:
         str_settings = {}
         for key, value in settings.items():
-            if isinstance(value, dict):
+            if key in ["SERVER", "PATH"]:
+                if isinstance(value, dict):
+                    str_settings[key] = {k: str(v) for k, v in value.items()}
+                else:
+                    str_settings[key] = str(value)
+            elif isinstance(value, dict):
                 str_settings[key] = self.convert_to_str(value)
             else:
-                str_settings[key] = str(value)
+                str_settings[key] = value
         return str_settings
 
 

@@ -63,14 +63,20 @@ class SettingsDialog(QDialog):
         self.setLayout(layout)
 
     def save_button_clicked(self):
-        index_worksheet = self.index_worksheets
-        row_edit = self.row_edit
-        row_head = self.row_head
-        cols_before_split = self.cols_before_split
-        cols_total = self.cols_total
-        col_ID = self.col_ID
-        col_date = self.col_date
-        col_type = self.col_type
+        self.settings_json["VERSION"]["VERSION_EXCEL"] = 1 if self.excel_version.isChecked() else 0
+        self.settings_json["VERSION"]["VERSION_SHEETS"] = 1 if self.sheets_version.isChecked() else 0
+        self.settings_json["VERSION"]["VERSION_DELTA"] = 1 if self.delta_version.isChecked() else 0
+        self.settings_json["VERSION"]["VERSION_TIME"] = 1 if self.time_version.isChecked() else 0
+        self.settings_json["TABLE"]["index_worksheets"] = int(self.index_worksheets.text())
+        self.settings_json["TABLE"]["nb_row_edit"] = int(self.row_edit.text())
+        self.settings_json["TABLE"]["nb_row_head"] = int(self.row_head.text())
+        self.settings_json["TABLE"]["nb_cols_before_split_sheets"] = int(self.cols_before_split.text())
+        self.settings_json["TABLE"]["nb_cols_total_head"] = int(self.cols_total.text())
+        self.settings_json["TABLE"]["col_ID"] = int(self.col_ID.text())
+        self.settings_json["TABLE"]["col_date"] = int(self.col_date.text())
+        self.settings_json["TABLE"]["col_type"] = int(self.col_type.text())
+
+        self.save_settings(self.settings_json)
 
     def save_settings(self, data: dict):
         with open("configs/settings.json", "w") as f:
@@ -84,8 +90,13 @@ class SettingsDialog(QDialog):
     def convert_to_str(self, settings: dict) -> dict:
         str_settings = {}
         for key, value in settings.items():
-            if isinstance(value, dict):
+            if key in ["TABLE", "VERSION"]:
+                if isinstance(value, dict):
+                    str_settings[key] = {k: str(v) for k, v in value.items()}
+                else:
+                    str_settings[key] = str(value)
+            elif isinstance(value, dict):
                 str_settings[key] = self.convert_to_str(value)
             else:
-                str_settings[key] = str(value)
+                str_settings[key] = value
         return str_settings
