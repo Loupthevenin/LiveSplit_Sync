@@ -62,6 +62,6 @@ PORT = settings_json["SERVER"]["PORT"]
 
 # Path
 #####################
-path_excel = settings_json["PATH"]["path_excel"]
+path_excel = r'' + settings_json["PATH"]["path_excel"]
 sheet_id = settings_json["PATH"]["sheet_id"]
 #####################

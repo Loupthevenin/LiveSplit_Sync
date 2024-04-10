@@ -4,6 +4,7 @@ import json
 
 from component.file_explorer_line_edit import FileExplorerLineEdit
 from component.settings_dialog import SettingsDialog
+from main import main
 
 
 class App(QtWidgets.QWidget):
@@ -57,6 +58,7 @@ class App(QtWidgets.QWidget):
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         connect_button = QPushButton("SE CONNECTER")
+        connect_button.clicked.connect(self.connect_button)
         connect_button.setStyleSheet("background-color: green; color: white;")
         connect_button.setFixedSize(200, 50)
         button_layout.addWidget(connect_button)
@@ -82,7 +84,13 @@ class App(QtWidgets.QWidget):
 
         self.save_settings(self.settings_json)
 
-    def save_settings(self, data: dict):
+    @staticmethod
+    def connect_button():
+        # Tester
+        main()
+
+    @staticmethod
+    def save_settings(data: dict):
         with open("configs/settings.json", "w") as f:
             json.dump(data, f, indent=4)
 

@@ -56,7 +56,7 @@ class SettingsDialog(QDialog):
         table_settings_group.setLayout(table_settings_layout)
         layout.addWidget(table_settings_group)
 
-        save_button = QPushButton("Save")
+        save_button = QPushButton("Save and quit")
         save_button.clicked.connect(self.save_button_clicked)
         layout.addWidget(save_button)
 
@@ -77,8 +77,10 @@ class SettingsDialog(QDialog):
         self.settings_json["TABLE"]["col_type"] = int(self.col_type.text())
 
         self.save_settings(self.settings_json)
+        self.close()
 
-    def save_settings(self, data: dict):
+    @staticmethod
+    def save_settings(data: dict):
         with open("configs/settings.json", "w") as f:
             json.dump(data, f, indent=4)
 
