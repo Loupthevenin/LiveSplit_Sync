@@ -1,3 +1,5 @@
+from app.configs.order import getdelta, getsplitindex, gettimerphase, getlastsplittime, getfinaltime_comp
+
 unique_delta_values = []
 unique_time_values = []
 unique_final_values = []
@@ -68,9 +70,9 @@ def convert_to_seconds(time_str) -> float:
 
 def convert_seconds_to_time_format(seconds) -> str:
     hours = int(seconds // 3600)
-    minutes = int(seconds % 3600 // 60)
-    seconds_remainder = int(seconds % 60)
-    centiseconds = round((seconds - int(seconds)) * 100)
+    minutes = str(int(seconds % 3600 // 60)).zfill(2)
+    seconds_remainder = str(int(seconds % 60)).zfill(2)
+    centiseconds = str(round((seconds - int(seconds)) * 100)).zfill(2)
 
     return f"'{hours}:{minutes}:{seconds_remainder},{centiseconds}"
 

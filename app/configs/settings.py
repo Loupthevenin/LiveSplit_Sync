@@ -62,7 +62,7 @@ PORT = settings_json["SERVER"]["PORT"]
 
 # Path
 #####################
-# path_excel = r'' + settings_json["PATH"]["path_excel"]
-path_excel = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
+path_excel = r'' + settings_json["PATH"]["path_excel"]
+# path_excel = r"C:\Users\agent.mpr2\Documents\Code\LiveSplit_Sync\excel\run.xlsx"
 sheet_id = settings_json["PATH"]["sheet_id"]
 #####################
