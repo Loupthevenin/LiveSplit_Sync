@@ -1,7 +1,6 @@
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox
 from PySide6.QtGui import QIcon
-import threading
 import json
 
 from app.component.file_explorer_line_edit import FileExplorerLineEdit
@@ -91,7 +90,6 @@ class App(QtWidgets.QWidget):
         self.save_settings(self.settings_json)
 
     def connect_button(self):
-        # TODO Problème fais "crash" l'app car fais tourner la loop. Le faire tourner en background
         self.main_loop_signal.emit()
 
 

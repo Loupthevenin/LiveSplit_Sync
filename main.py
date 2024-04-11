@@ -1,4 +1,5 @@
 import datetime
+import threading
 
 from PySide6 import QtWidgets
 from PySide6.QtGui import QIcon
@@ -6,36 +7,38 @@ from PySide6.QtGui import QIcon
 
 from app.configs.settings import (VERSION_SHEETS, VERSION_EXCEL, VERSION_TIME, VERSION_DELTA, SERVER_IP, PORT, nb_cols_before_split_sheets)
 from connect import Connect
-from analyser import convert_time_format, convert_seconds_to_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
+from analyser import convert_time_format, convert_seconds_to_time_format, convert_to_seconds, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
 from app.app import App
 
 
-VERSION = ""
+# def version_import():
+#     VERSION = ""
+#
+#     if VERSION_SHEETS:
+#         if (VERSION_DELTA + VERSION_TIME) > 1:
+#             from tools.sheets_tools.sync_delta_time import how_many_split, current_split, new_row, write_time, write_start, write_reset, is_pb
+#             VERSION = "D+T+S"
+#         elif VERSION_DELTA:
+#             from tools.sheets_tools.sync_delta import how_many_split, current_split, new_row, write_time, write_start, write_reset, is_pb
+#             VERSION = "D+S"
+#         else:
+#             # autre sync_time ?
+#             pass
+#     else:
+#         if (VERSION_DELTA + VERSION_TIME) > 1:
+#             from tools.excel_tools.sync_delta_time import how_many_split, current_split, new_row, write_time, write_start, write_reset, is_pb
+#             VERSION = "D+T+E"
+#         elif VERSION_DELTA:
+#             from tools.excel_tools.sync_delta import how_many_split, current_split, new_row, write_time, write_start, write_reset, is_pb
+#             VERSION = "D+E"
+#         else:
+#             # autre sync_time ?
+#             pass
 
+# TODO J'utilise un thread pour le background problème : TOUT doit etre chargé dans le meme Thread donc import etc... (+ par rapport a xlwings)
+# TODO Et reflechir a un code plus synthetique sur main
 
-if VERSION_SHEETS:
-    if (VERSION_DELTA + VERSION_TIME) > 1:
-        from tools.sheets_tools.sync_delta_time import *
-        VERSION = "D+T+S"
-    elif VERSION_DELTA:
-        from tools.sheets_tools.sync_delta import *
-        VERSION = "D+S"
-    else:
-        # autre sync_time ?
-        pass
-else:
-    if (VERSION_DELTA + VERSION_TIME) > 1:
-        from tools.excel_tools.sync_delta_time import *
-        VERSION = "D+T+E"
-    elif VERSION_DELTA:
-        from tools.excel_tools.sync_delta import *
-        VERSION = "D+E"
-    else:
-        # autre sync_time ?
-        pass
-
-
-def if_final_time(delta_list, time_list, save_time_format):
+def if_final_time(delta_list, time_list, save_time_format, is_pb):
     split_index = len(delta_list) + nb_cols_before_split_sheets + 1
     if is_pb(split_index, save_time_format):
         write_time(delta_time=save_time_format, index_col=split_index)
@@ -53,6 +56,34 @@ def if_final_time(delta_list, time_list, save_time_format):
 
 
 def main():
+    # version_import()
+    VERSION = ""
+
+    if VERSION_SHEETS:
+        if (VERSION_DELTA + VERSION_TIME) > 1:
+            from tools.sheets_tools.sync_delta_time import how_many_split, current_split, new_row, write_time, \
+                write_start, write_reset, is_pb
+            VERSION = "D+T+S"
+        elif VERSION_DELTA:
+            from tools.sheets_tools.sync_delta import how_many_split, current_split, new_row, write_time, write_start, \
+                write_reset, is_pb
+            VERSION = "D+S"
+        else:
+            # autre sync_time ?
+            pass
+    else:
+        if (VERSION_DELTA + VERSION_TIME) > 1:
+            from tools.excel_tools.sync_delta_time import how_many_split, current_split, new_row, write_time, \
+                write_start, write_reset, is_pb
+            VERSION = "D+T+E"
+        elif VERSION_DELTA:
+            from tools.excel_tools.sync_delta import how_many_split, current_split, new_row, write_time, write_start, \
+                write_reset, is_pb
+            VERSION = "D+E"
+        else:
+            # autre sync_time ?
+            pass
+
     client = Connect(SERVER_IP, PORT)
     client.connect()
 
@@ -109,13 +140,13 @@ def main():
             print(time_format)
 
             if len(delta_time_list) == total_splits:
-                if_final_time(delta_time_list, time_split_list, save_time_format)
+                if_final_time(delta_time_list, time_split_list, save_time_format, is_pb)
             elif len(delta_time_list) < total_splits:
                 waiting = True
                 continue
         elif waiting:
             if len(delta_time_list) == total_splits:
-                if_final_time(delta_time_list, time_split_list, save_time_format)
+                if_final_time(delta_time_list, time_split_list, save_time_format, is_pb)
                 waiting = False
 
         # RESET
@@ -128,11 +159,16 @@ def main():
                 time_split_list.clear()
 
 
+def run_thread_main():
+    thread_main_loop = threading.Thread(target=main)
+    thread_main_loop.start()
+
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     app.setWindowIcon(QIcon('app/images/LiveSplit_ico.ico'))
     win = App()
     win.resize(800, 600)
     win.show()
-    win.main_loop_signal.connect(main)
+    win.main_loop_signal.connect(run_thread_main)
     app.exec()
