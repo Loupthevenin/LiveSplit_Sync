@@ -1,5 +1,6 @@
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox
+from PySide6.QtGui import QIcon
 import json
 
 from app.component.file_explorer_line_edit import FileExplorerLineEdit
@@ -17,6 +18,7 @@ class App(QtWidgets.QWidget):
 
     def init_ui(self):
         self.setWindowTitle("LiveSplit Server")
+        self.setWindowIcon(QIcon('app/images/LiveSplit_ico.ico'))
 
         layout = QVBoxLayout()
         layout.setSpacing(20)

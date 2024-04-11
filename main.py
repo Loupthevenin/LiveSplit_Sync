@@ -1,6 +1,8 @@
 import datetime
 
 from PySide6 import QtWidgets
+from PySide6.QtGui import QIcon
+
 
 from app.configs.settings import (VERSION_SHEETS, VERSION_EXCEL, VERSION_TIME, VERSION_DELTA, SERVER_IP, PORT, nb_cols_before_split_sheets)
 from connect import Connect
@@ -128,6 +130,7 @@ def main():
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
+    app.setWindowIcon(QIcon('app/images/LiveSplit_ico.ico'))
     win = App(main)
     win.resize(800, 600)
     win.show()
