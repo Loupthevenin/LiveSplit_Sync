@@ -53,15 +53,15 @@ def if_final_time(delta_list, time_list, save_time_format):
 
 
 def main():
+    client = Connect(SERVER_IP, PORT)
+    client.connect()
+
     waiting = False
     save_time_format = ""
 
     delta_time_list = []
     time_split_list = []
     total_splits = how_many_split()
-
-    client = Connect(SERVER_IP, PORT)
-    client.connect()
 
     while True:
         # Start run
@@ -131,7 +131,8 @@ def main():
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     app.setWindowIcon(QIcon('app/images/LiveSplit_ico.ico'))
-    win = App(main)
+    win = App()
     win.resize(800, 600)
     win.show()
+    win.main_loop_signal.connect(main)
     app.exec()

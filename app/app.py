@@ -1,6 +1,7 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 from PySide6.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox
 from PySide6.QtGui import QIcon
+import threading
 import json
 
 from app.component.file_explorer_line_edit import FileExplorerLineEdit
@@ -8,11 +9,12 @@ from app.component.settings_dialog import SettingsDialog
 
 
 class App(QtWidgets.QWidget):
-    def __init__(self, main):
+    main_loop_signal = QtCore.Signal()
+
+    def __init__(self):
         super().__init__()
 
         self.settings_json = self.load_settings()
-        self.main_loop = main
 
         self.init_ui()
 
@@ -67,6 +69,8 @@ class App(QtWidgets.QWidget):
         button_layout.addStretch()
         layout.addLayout(button_layout)
 
+        # TODO Button deconnect
+
         # Sttings button
         settings_button = QPushButton("Settings")
         settings_button.clicked.connect(self.open_settings)
@@ -87,8 +91,9 @@ class App(QtWidgets.QWidget):
         self.save_settings(self.settings_json)
 
     def connect_button(self):
-        # Tester
-        self.main_loop()
+        # TODO Problème fais "crash" l'app car fais tourner la loop. Le faire tourner en background
+        self.main_loop_signal.emit()
+
 
     @staticmethod
     def save_settings(data: dict):
