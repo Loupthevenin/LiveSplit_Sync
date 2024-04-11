@@ -1,7 +1,7 @@
 import json
 
 
-with open("settings.json", "r") as f:
+with open("app/configs/settings.json", "r") as f:
     settings_json = json.load(f)
 
 

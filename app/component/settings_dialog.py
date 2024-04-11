@@ -81,11 +81,11 @@ class SettingsDialog(QDialog):
 
     @staticmethod
     def save_settings(data: dict):
-        with open("configs/settings.json", "w") as f:
+        with open("app/configs/settings.json", "w") as f:
             json.dump(data, f, indent=4)
 
     def load_settings(self) -> dict:
-        with open("configs/settings.json", "r") as f:
+        with open("app/configs/settings.json", "r") as f:
             settings = json.load(f)
             return self.convert_to_str(settings)
 

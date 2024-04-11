@@ -1,8 +1,11 @@
 import datetime
 
+from PySide6 import QtWidgets
+
 from app.configs.settings import *
 from connect import Connect
 from analyser import convert_time_format, convert_seconds_to_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
+from app.app import App
 
 
 VERSION = ""
@@ -124,4 +127,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    app = QtWidgets.QApplication([])
+    win = App(main)
+    win.resize(800, 600)
+    win.show()
+    app.exec()

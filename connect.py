@@ -33,10 +33,11 @@ class Connect:
 
 
 # CONNECT GOOGLE SHEETS
-scopes = [
-    "https://www.googleapis.com/auth/spreadsheets"
-]
-creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
-client = gspread.authorize(creds)
+def connect_sheet():
+    scopes = [
+        "https://www.googleapis.com/auth/spreadsheets"
+    ]
+    creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+    client = gspread.authorize(creds)
 
-workbook = client.open_by_key(sheet_id)
+    return client.open_by_key(sheet_id)

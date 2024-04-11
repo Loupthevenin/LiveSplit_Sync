@@ -1,17 +1,17 @@
-from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtWidgets import QLineEdit, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QSpacerItem, QSizePolicy, QFileDialog, QDialog, QGroupBox, QCheckBox
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox
 import json
 
-from component.file_explorer_line_edit import FileExplorerLineEdit
-from component.settings_dialog import SettingsDialog
-from main import main
+from app.component.file_explorer_line_edit import FileExplorerLineEdit
+from app.component.settings_dialog import SettingsDialog
 
 
 class App(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, main):
         super().__init__()
 
         self.settings_json = self.load_settings()
+        self.main_loop = main
 
         self.init_ui()
 
@@ -84,18 +84,17 @@ class App(QtWidgets.QWidget):
 
         self.save_settings(self.settings_json)
 
-    @staticmethod
-    def connect_button():
+    def connect_button(self):
         # Tester
-        main()
+        self.main_loop()
 
     @staticmethod
     def save_settings(data: dict):
-        with open("configs/settings.json", "w") as f:
+        with open("app/configs/settings.json", "w") as f:
             json.dump(data, f, indent=4)
 
     def load_settings(self) -> dict:
-        with open("configs/settings.json", "r") as f:
+        with open("app/configs/settings.json", "r") as f:
             settings = json.load(f)
             return self.convert_to_str(settings)
 
@@ -112,10 +111,3 @@ class App(QtWidgets.QWidget):
             else:
                 str_settings[key] = value
         return str_settings
-
-
-app = QtWidgets.QApplication([])
-win = App()
-win.resize(800, 600)
-win.show()
-app.exec()

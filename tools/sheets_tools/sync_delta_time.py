@@ -1,10 +1,9 @@
-from connect import workbook
+from connect import connect_sheet
 from app.configs.settings import *
 from analyser import convert_to_seconds
 
 
-# sheets = map(lambda x: x.title, workbook.worksheets())
-
+workbook = connect_sheet()
 sheet = workbook.get_worksheet(index_worksheets)
 
 
