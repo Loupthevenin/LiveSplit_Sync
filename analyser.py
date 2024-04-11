@@ -1,6 +1,3 @@
-from app.configs.order import *
-
-
 unique_delta_values = []
 unique_time_values = []
 unique_final_values = []

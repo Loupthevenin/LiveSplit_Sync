@@ -1,5 +1,5 @@
 from connect import connect_sheet
-from app.configs.settings import *
+from app.configs.settings import (index_worksheets, nb_row_head, nb_cols_total_head, nb_row_edit, col_ID, col_date, col_type, row_pre_ID)
 from analyser import convert_to_seconds
 
 

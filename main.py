@@ -2,7 +2,7 @@ import datetime
 
 from PySide6 import QtWidgets
 
-from app.configs.settings import *
+from app.configs.settings import (VERSION_SHEETS, VERSION_EXCEL, VERSION_TIME, VERSION_DELTA, SERVER_IP, PORT, nb_cols_before_split_sheets)
 from connect import Connect
 from analyser import convert_time_format, convert_seconds_to_time_format, get_delta_time, get_final_time, get_timer_phase, get_split_index, get_last_time
 from app.app import App
